@@ -125,14 +125,12 @@ class _ToastElementState extends State<ToastElement>
                 child: GestureDetector(
                   onVerticalDragUpdate: (details) {
                     disappearTimer.cancel();
-                    if (details.delta.dy < -8) {
-                      return;
-                    }
 
-                    dragDeltaY += details.delta.dy * 0.75;
+                    dragDeltaY += details.delta.dy;
 
                     _startController.value =
-                        (1 + (dragDeltaY / 56)).clamp(0.0, 1.0);
+                        (1 + (dragDeltaY / (widget.element.height ?? 72)))
+                            .clamp(0.0, 1.0);
                   },
                   onVerticalDragEnd: (dragEndDetail) {
                     dragDeltaY = 0;
