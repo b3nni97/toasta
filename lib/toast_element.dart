@@ -47,6 +47,9 @@ class _ToastElementState extends State<ToastElement>
 
   late double dragDeltaY = 0;
 
+  final GlobalKey customWidgetKey = GlobalKey();
+  late double? customWidgetHeight;
+
   @override
   void initState() {
     _startController.forward().then((_) {
@@ -69,6 +72,13 @@ class _ToastElementState extends State<ToastElement>
             : const Duration(seconds: 3), () {
       disappear();
     });
+
+    if (widget.element.custom != null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        calcWidgetHeight();
+      });
+    }
+
     super.initState();
   }
 
@@ -89,6 +99,20 @@ class _ToastElementState extends State<ToastElement>
     _scaleController.dispose();
     _fadeController.dispose();
     super.dispose();
+  }
+
+  /**
+   * Calculate the widget height if a user has set a custom widget
+   * This is needed to detect the gestures correctly
+   */
+  calcWidgetHeight() {
+    final keyContext = customWidgetKey.currentContext;
+
+    if (keyContext != null) {
+      final box = keyContext.findRenderObject() as RenderBox;
+
+      customWidgetHeight = box.size.height;
+    }
   }
 
   @override
@@ -128,9 +152,12 @@ class _ToastElementState extends State<ToastElement>
 
                     dragDeltaY += details.delta.dy;
 
-                    _startController.value =
-                        (1 + (dragDeltaY / (widget.element.height ?? 72)))
-                            .clamp(0.0, 1.0);
+                    _startController.value = (1 +
+                            (dragDeltaY /
+                                (customWidgetHeight ??
+                                    widget.element.height ??
+                                    72)))
+                        .clamp(0.0, 1.0);
                   },
                   onVerticalDragEnd: (dragEndDetail) {
                     dragDeltaY = 0;
@@ -150,57 +177,62 @@ class _ToastElementState extends State<ToastElement>
                       _startController.forward();
                     }
                   },
-                  child: widget.element.custom ??
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          primary: widget.element.darkMode == true
-                              ? Colors.grey
-                              : Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32.0),
+                  child: widget.element.custom != null
+                      ? Container(
+                          key: customWidgetKey,
+                          child: widget.element.custom,
+                        )
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: widget.element.darkMode == true
+                                ? Colors.grey
+                                : Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(32.0),
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          if (widget.element.onTap != null) {
-                            widget.element.onTap!();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 6),
-                          child: SizedBox(
-                            width: widget.element.width != null
-                                ? widget.element.width!
-                                : MediaQuery.of(context).size.width > 640
-                                    ? MediaQuery.of(context).size.width * 0.4
-                                    : MediaQuery.of(context).size.width * 0.7,
-                            height: widget.element.height != null
-                                ? widget.element.height!
-                                : 56,
-                            child: Row(
-                              children: [
-                                if (widget.element.leading != null)
-                                  widget.element.leading!,
-                                ...toastStatus(),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      toastTitle(),
-                                      ...toastSubtitle(),
-                                    ],
+                          onPressed: () {
+                            if (widget.element.onTap != null) {
+                              widget.element.onTap!();
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 6),
+                            child: SizedBox(
+                              width: widget.element.width != null
+                                  ? widget.element.width!
+                                  : MediaQuery.of(context).size.width > 640
+                                      ? MediaQuery.of(context).size.width * 0.4
+                                      : MediaQuery.of(context).size.width * 0.7,
+                              height: widget.element.height != null
+                                  ? widget.element.height!
+                                  : 56,
+                              child: Row(
+                                children: [
+                                  if (widget.element.leading != null)
+                                    widget.element.leading!,
+                                  ...toastStatus(),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        toastTitle(),
+                                        ...toastSubtitle(),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                if (widget.element.trailing != null)
-                                  widget.element.trailing!,
-                              ],
+                                  if (widget.element.trailing != null)
+                                    widget.element.trailing!,
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
                 ),
               ),
             ),
