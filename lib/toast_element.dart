@@ -83,6 +83,8 @@ class _ToastElementState extends State<ToastElement>
   }
 
   void disappear() {
+    if (!mounted) return;
+
     _startController.reverse().then((value) {
       if (widget.element.onExit != null) {
         widget.element.onExit!();
