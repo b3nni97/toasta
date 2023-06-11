@@ -123,12 +123,13 @@ class _ToastElementState extends State<ToastElement>
       position: _startOffsetFloat,
       child: ScaleTransition(
         scale: _animation,
-        alignment: FractionalOffset.topCenter,
+        alignment: Alignment.topCenter,
         child: Align(
-          alignment: FractionalOffset.topCenter,
+          alignment: Alignment.topCenter,
           child: SafeArea(
             child: Container(
               margin: kIsWeb ? const EdgeInsets.only(top: 16) : null,
+              width: double.infinity,
               child: Container(
                 decoration: widget.element.custom == null
                     ? BoxDecoration(
@@ -138,7 +139,7 @@ class _ToastElementState extends State<ToastElement>
                                 Radius.circular(25.0),
                               ),
                         boxShadow: widget.element.darkMode == true
-                            ? []
+                            ? null
                             : [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.13),
@@ -180,9 +181,9 @@ class _ToastElementState extends State<ToastElement>
                     }
                   },
                   child: widget.element.custom != null
-                      ? Container(
+                      ? KeyedSubtree(
                           key: customWidgetKey,
-                          child: widget.element.custom,
+                          child: widget.element.custom!,
                         )
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
