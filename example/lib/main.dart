@@ -56,7 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 2,
-                            primary: darkMode ? Colors.white : Colors.black),
+                            backgroundColor:
+                                darkMode ? Colors.white : Colors.black),
                         child: Text('Title & Subtitle',
                             style: TextStyle(
                                 color: darkMode ? Colors.black : Colors.white)),
@@ -75,7 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 2,
-                            primary: darkMode ? Colors.white : Colors.black),
+                            backgroundColor:
+                                darkMode ? Colors.white : Colors.black),
                         child: Text('Without Fade In Subtitle',
                             style: TextStyle(
                                 color: darkMode ? Colors.black : Colors.white)),
@@ -94,7 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 2,
-                            primary: darkMode ? Colors.white : Colors.black),
+                            backgroundColor:
+                                darkMode ? Colors.white : Colors.black),
                         child: Text('Custom Duration',
                             style: TextStyle(
                                 color: darkMode ? Colors.black : Colors.white)),
@@ -112,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            elevation: 2, primary: Colors.green),
+                            elevation: 2, backgroundColor: Colors.green),
                         child: Text('Success',
                             style: TextStyle(color: Colors.white)),
                         onPressed: () {
@@ -129,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            elevation: 2, primary: Colors.red),
+                            elevation: 2, backgroundColor: Colors.red),
                         child: Text('Failed',
                             style: TextStyle(color: Colors.white)),
                         onPressed: () {
@@ -146,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            elevation: 2, primary: Colors.yellow),
+                            elevation: 2, backgroundColor: Colors.yellow),
                         child: Text('Warning',
                             style: TextStyle(color: Colors.black)),
                         onPressed: () {
@@ -163,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 48,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            elevation: 2, primary: Colors.blue),
+                            elevation: 2, backgroundColor: Colors.blue),
                         child:
                             Text('Info', style: TextStyle(color: Colors.white)),
                         onPressed: () {

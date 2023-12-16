@@ -188,7 +188,7 @@ class _ToastElementState extends State<ToastElement>
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            primary: widget.element.darkMode == true
+                            backgroundColor: widget.element.darkMode == true
                                 ? Colors.grey
                                 : Colors.white,
                             shape: RoundedRectangleBorder(
