@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:toasta/provider.dart';
 
@@ -150,93 +149,42 @@ class _ToastElementState extends State<ToastElement>
                               ])
                     : null,
                 child: GestureDetector(
-                  onVerticalDragUpdate: (details) {
-                    disappearTimer.cancel();
-
-                    dragDeltaY += details.delta.dy;
-
-                    _startController.value = (1 +
-                            (dragDeltaY /
-                                (customWidgetHeight ??
-                                    widget.element.height ??
-                                    72)))
-                        .clamp(0.0, 1.0);
-                  },
-                  onVerticalDragEnd: (dragEndDetail) {
-                    dragDeltaY = 0;
-
-                    disappearTimer = Timer(
-                        widget.element.duration != null
-                            ? widget.element.duration!
-                            : const Duration(seconds: 3), () {
-                      disappear();
-                    });
-
-                    if (_startController.value < 0.5 ||
-                        dragEndDetail.velocity.pixelsPerSecond.dy < -8) {
+                    onVerticalDragUpdate: (details) {
                       disappearTimer.cancel();
-                      disappear();
-                    } else {
-                      _startController.forward();
-                    }
-                  },
-                  child: widget.element.custom != null
-                      ? KeyedSubtree(
-                          key: customWidgetKey,
-                          child: widget.element.custom!,
-                        )
-                      : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: widget.element.darkMode == true
-                                ? Colors.grey
-                                : Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(32.0),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (widget.element.onTap != null) {
-                              widget.element.onTap!();
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 6),
-                            child: SizedBox(
-                              width: widget.element.width != null
-                                  ? widget.element.width!
-                                  : MediaQuery.of(context).size.width > 640
-                                      ? MediaQuery.of(context).size.width * 0.4
-                                      : MediaQuery.of(context).size.width * 0.7,
-                              height: widget.element.height != null
-                                  ? widget.element.height!
-                                  : 56,
-                              child: Row(
-                                children: [
-                                  if (widget.element.leading != null)
-                                    widget.element.leading!,
-                                  ...toastStatus(),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        toastTitle(),
-                                        ...toastSubtitle(),
-                                      ],
-                                    ),
-                                  ),
-                                  if (widget.element.trailing != null)
-                                    widget.element.trailing!,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                ),
+
+                      dragDeltaY += details.delta.dy;
+
+                      _startController.value = (1 +
+                              (dragDeltaY /
+                                  (customWidgetHeight ??
+                                      widget.element.height ??
+                                      72)))
+                          .clamp(0.0, 1.0);
+                    },
+                    onVerticalDragEnd: (dragEndDetail) {
+                      dragDeltaY = 0;
+
+                      disappearTimer = Timer(
+                          widget.element.duration != null
+                              ? widget.element.duration!
+                              : const Duration(seconds: 3), () {
+                        disappear();
+                      });
+
+                      if (_startController.value < 0.5 ||
+                          dragEndDetail.velocity.pixelsPerSecond.dy < -8) {
+                        disappearTimer.cancel();
+                        disappear();
+                      } else {
+                        _startController.forward();
+                      }
+                    },
+                    child: widget.element.custom != null
+                        ? KeyedSubtree(
+                            key: customWidgetKey,
+                            child: widget.element.custom!,
+                          )
+                        : const SizedBox.shrink()),
               ),
             ),
           ),
@@ -292,24 +240,6 @@ class _ToastElementState extends State<ToastElement>
       ];
     }
     return [];
-  }
-
-  Widget toastTitle() {
-    if (widget.element.title == null) {
-      return Container();
-    }
-    return widget.element.title.runtimeType == String
-        ? Expanded(
-            child: Marquee(
-              blankSpace: 32,
-              fadingEdgeStartFraction: 0.05,
-              fadingEdgeEndFraction: 0.05,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w500),
-              text: widget.element.title ?? '',
-            ),
-          )
-        : widget.element.title;
   }
 
   List<Widget> toastSubtitle() {

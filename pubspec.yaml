@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  marquee: ^2.2.0
   provider: ^6.0.0
 
 dev_dependencies:
