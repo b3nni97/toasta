@@ -198,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   SelectableText('Built by @megatunger',
-                      style: Theme.of(context).textTheme.caption)
+                      style: Theme.of(context).textTheme.bodySmall)
                 ]),
           ),
         ),

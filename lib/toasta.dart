@@ -26,12 +26,17 @@ class _ToastaContainerState extends State<ToastaContainer> {
       create: (context) => ToastaProvider(),
       child: Consumer<ToastaProvider>(
         builder: (context, _toastaProvider, child) {
-          Widget toastElement = Container();
+          Widget? toastElement;
           if (_toastaProvider.currentToasting != null) {
             toastElement =
                 ToastElement(element: _toastaProvider.currentToasting!);
           }
-          return Stack(children: [child!, toastElement]);
+          return Stack(
+            children: [
+              child!,
+              if (toastElement != null) toastElement,
+            ],
+          );
         },
         child: widget.child,
       ),
