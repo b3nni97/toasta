@@ -49,6 +49,8 @@ class _ToastElementState extends State<ToastElement>
   final GlobalKey customWidgetKey = GlobalKey();
   late double? customWidgetHeight;
 
+  bool _isDisappeared = false;
+
   @override
   void initState() {
     _startController.forward().then((_) {
@@ -62,7 +64,9 @@ class _ToastElementState extends State<ToastElement>
       _fadeController.forward();
     } else {
       Future.delayed(const Duration(milliseconds: 200), () {
-        _fadeController.forward();
+        if (!_isDisappeared && mounted) {
+          _fadeController.forward();
+        }
       });
     }
     disappearTimer = Timer(
@@ -71,6 +75,16 @@ class _ToastElementState extends State<ToastElement>
             : const Duration(seconds: 3), () {
       disappear();
     });
+
+    widget.element.controller?.onScheduleDisappear = () async {
+      // This is called if the toast should disappear because another
+      // toast should be shown.
+      // This toast disappears after waiting for 1 second.
+      disappearTimer.cancel();
+      disappearTimer = Timer(const Duration(milliseconds: 1000), () {
+        disappear();
+      });
+    };
 
     if (widget.element.custom != null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -82,15 +96,21 @@ class _ToastElementState extends State<ToastElement>
   }
 
   void disappear() {
-    if (!mounted) return;
+    if (!mounted || _isDisappeared) return;
+
+    _isDisappeared = true;
+
+    ToastaProvider toastaProvider =
+        Provider.of<ToastaProvider>(context, listen: false);
+
+    toastaProvider.prePop(widget.element);
 
     _startController.reverse().then((value) {
       if (widget.element.onExit != null) {
         widget.element.onExit!();
       }
-      ToastaProvider toastaProvider =
-          Provider.of<ToastaProvider>(context, listen: false);
-      toastaProvider.pop();
+
+      toastaProvider.popped(widget.element);
     });
   }
 

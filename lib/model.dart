@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:toasta/toast_controller.dart';
 
 import 'enum.dart';
 
@@ -21,6 +21,8 @@ class Toast {
   Duration? duration;
   Widget? custom;
 
+  ToastController? controller;
+
   Toast({
     this.width,
     this.height,
@@ -38,5 +40,6 @@ class Toast {
     this.status,
     this.duration,
     this.custom,
+    this.controller,
   });
 }
